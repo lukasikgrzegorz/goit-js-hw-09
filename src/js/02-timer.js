@@ -1,26 +1,31 @@
+import Notiflix from 'notiflix';
 import flatpickr from "flatpickr";
 import "flatpickr/dist/flatpickr.min.css";
 
 btnStart = document.querySelector('[data-start]');
+timerDay= document.querySelector('[data-days]');
+timerHours= document.querySelector('[data-hours]');
+timerMinutes = document.querySelector('[data-minutes]');
+timerSeconds = document.querySelector('[data-seconds]');
+
+
 btnStart.setAttribute("disabled", "");
 
-actualDate = new Date();
-remaingTime = 0;
+let actualDate = new Date();
+let remaingTime = 0;
+let mainInterval;
 
-function convertMs(ms) {
-  // Number of milliseconds per unit of time
+const addLeadingZero = (value) => value.toString().padStart(2, "0");
+
+const convertMs = (ms) => {
   const second = 1000;
   const minute = second * 60;
   const hour = minute * 60;
   const day = hour * 24;
 
-  // Remaining days
   const days = Math.floor(ms / day);
-  // Remaining hours
   const hours = Math.floor((ms % day) / hour);
-  // Remaining minutes
   const minutes = Math.floor(((ms % day) % hour) / minute);
-  // Remaining seconds
   const seconds = Math.floor((((ms % day) % hour) % minute) / second);
 
   return { days, hours, minutes, seconds };
@@ -32,18 +37,44 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
-   
       if (selectedDates[0] < actualDate) {
-            window.alert("Please choose a date in the future");
-      } else {
-            btnStart.removeAttribute("disabled");
-            console.log(convertMs(selectedDates[0] - actualDate));
+        Notiflix.Notify.failure("Please choose a date in the future");
+      } else {      
+        if (mainInterval) {
+          clearInterval(mainInterval);
+          timerDay.innerHTML = addLeadingZero(0);
+          timerHours.innerHTML = addLeadingZero(0);
+          timerMinutes.innerHTML = addLeadingZero(0);
+          timerSeconds.innerHTML = addLeadingZero(0);
+        }     
+        btnStart.removeAttribute("disabled");
+        remaingTime = (selectedDates[0].getTime() - actualDate.getTime()); 
       }
-
   },
 };
 
+const countDownTime = (time) => { 
+  
+  mainInterval = setInterval(() => {
+    
+    if (time-1000 > 0) {
+      time -= 1000; 
+      let timerInner = convertMs(time);
+      timerDay.innerHTML = addLeadingZero(timerInner.days);
+      timerHours.innerHTML = addLeadingZero(timerInner.hours);
+      timerMinutes.innerHTML = addLeadingZero(timerInner.minutes);
+      timerSeconds.innerHTML = addLeadingZero(timerInner.seconds);
+    } else {
+      clearInterval(mainInterval);
+    }
+  },1000)  
+}
+
 const fp = flatpickr("#datetime-picker", options);
 
+btnStart.addEventListener("click", () => {
+  countDownTime(remaingTime);
+  btnStart.setAttribute("disabled", "");
+});
 
 
