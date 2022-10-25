@@ -12,12 +12,12 @@ btnStop.setAttribute("disabled", "");
 btnStart.addEventListener("click", () => {
     mainInterval = setInterval(() => document.body.style.backgroundColor = getRandomHexColor(), 1000);
     btnStart.setAttribute("disabled", "");
-    btnStop.removeAttribute("disabled", "");
+    btnStop.removeAttribute("disabled");
 })
 
 btnStop.addEventListener("click", () => {
     clearInterval(mainInterval);
-    btnStart.removeAttribute("disabled", "");
+    btnStart.removeAttribute("disabled");
     btnStop.setAttribute("disabled", "");
 })
 
