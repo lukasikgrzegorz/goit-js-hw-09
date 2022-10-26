@@ -11,7 +11,7 @@ const timerSeconds = document.querySelector('[data-seconds]');
 
 btnStart.setAttribute("disabled", "");
 
-let actualDate = new Date();
+let actualDate;
 let remaingTime = 0;
 let mainInterval;
 
@@ -37,6 +37,7 @@ const options = {
   defaultDate: new Date(),
   minuteIncrement: 1,
   onClose(selectedDates) {
+      actualDate = new Date();
       if (selectedDates[0] < actualDate) {
         Notiflix.Notify.failure("Please choose a date in the future");
       } else {      
