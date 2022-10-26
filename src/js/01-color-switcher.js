@@ -4,8 +4,8 @@ const getRandomHexColor = () => {
 
 let mainInterval;
 
-const btnStart = document.querySelector('[data-start]');
-const btnStop = document.querySelector('[data-stop]');
+btnStart = document.querySelector('[data-start]');
+btnStop = document.querySelector('[data-stop]');
 
 btnStop.setAttribute("disabled", "");
 
